@@ -13,7 +13,10 @@ ext{
                      'androidx.appcompat:appcompat:1.3.1',
                      'com.google.android.material:material:1.4.0',
                      'androidx.constraintlayout:constraintlayout:2.1.0',
-            ]
+
+
+            ],
+            arouterApiVersion:"1.5.2"
     ]
 
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="GradleMigrationSettings" migrationVersion="1" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
@@ -9,12 +10,15 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/ArouterModule" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/aroutermd" />
+            <option value="$PROJECT_DIR$/aroutermodule" />
             <option value="$PROJECT_DIR$/basea" />
             <option value="$PROJECT_DIR$/baseb" />
             <option value="$PROJECT_DIR$/modulea" />
             <option value="$PROJECT_DIR$/moduleb" />
-            <option value="$PROJECT_DIR$/mylibrary" />
+            <option value="$PROJECT_DIR$/modulebase" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

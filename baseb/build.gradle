@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk rootProject.ext.android.compileSdk
 
     defaultConfig {
         minSdk rootProject.ext.android.minSdk
@@ -28,9 +28,7 @@ android {
 
 dependencies {
 
-    implementation rootProject.ext.dependencies .publicimplementation
+    api rootProject.ext.dependencies .publicimplementation
+    api "com.alibaba:arouter-api:${rootProject.ext.dependencies.arouterApiVersion}"
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
