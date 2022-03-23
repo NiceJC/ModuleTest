@@ -3,6 +3,8 @@ package com.bxfox.moduletest
 import android.util.Log
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 
 class KTTest {
     //可变引用
@@ -408,21 +410,66 @@ class KTTest {
         println(result ?: println("is not String"))
     }
 
+    //非空断言 ！！(如果空 会抛异常)
+    //非空断言用于把任何值转换为非空类型，如果对 null 值做非空断言，则会抛出异常
+    fun checkNotNull(){
+        var name: String? = "leavesC"
+        check11(name) //7
+
+        name = null
+        check11(name) //kotlinNullPointerException
+    }
+    fun check11(name: String?) {
+        println(name!!.length)
+    }
+
+    //可空类型的扩展
+    //允许接收者为 null 的调用，并在该函数中处理 null
+    //contract 上下文的关系传递
+    fun checkNullExtend(){
+        val name:String?=null;
+        print(name.isNullOrEmpty())
+    }
+
+    //类型转换
+    //编译器跟踪不可变值的 is 检查以及显式转换，并在需要时自动插入安全的转换
+    //当类型满足is的时候，自动转为对应的类型
+    fun parserTypeIs(value: Any) {
+        when (value) {
+            is String -> println("value is String , length : ${value.length}")
+            is Int -> println("value is Int , toLong : ${value.toLong()}")
+            !is Long -> println("value !is Long")
+            else -> println("unknown")
+        }
+    }
+
+    //as相当于强转，当as的类型不对 会抛出ClassCastException
+    fun parserTypeAs(value: Any) {
+        val tempValue = value as String
+        println("value is String , length is ${tempValue.length}")
+    }
+    //也可使用as？在转换失败时返回null 而不抛出异常
+    //因为转换结果是可空的 所以接受类型要加？
+    fun parserTypeAs2(value: Any) {
+        val tempValue:String? = value as? String
+        println("value is String , length is ${tempValue ?.length}")
+    }
+
 
 }
 
 /**
- * 修饰符
+ * 修饰符(类默认是 final且 public 的)
  * Kotlin 中的类和方法默认都是 final 的，即不可继承的
  * 如果想允许创建一个类的子类，需要使用 open 修饰符来标识这个类，
  * 此外，也需要为每一个希望被重写的属性和方法添加 open 修饰符
  */
-open class MyView( name:String){
+ open class MyView( name:String){
     open fun click():Boolean {
         return true
     }
 }
-private class MySonView:MyView("fe"){
+ class MySonView:MyView("fe"){
      val a:Int=2
 
     override final fun click(): Boolean {
@@ -430,7 +477,6 @@ private class MySonView:MyView("fe"){
         return super.click()
     }
 }
-
 /**
  *
 修饰符	         类成员	           顶层声明
@@ -440,15 +486,169 @@ protected	     子类中可见
 private	         类中可见	      文件中可见
  */
 
+//constructor(val x: Int, val y: Int) 这部分为主构造函数
+//constructor 在构造函数没有注解或可见性修饰符时可省略
+class Point1   (val x: Int, val y: Int)
+class Point2 private constructor (val x: Int, val y: Int)
+//初始化的代码可以放到以 init 关键字作为前缀的初始化块(可以多个)
+//构造函数的参数如果用 val/var 进行修饰，则相当于在类内部声明了一个同名的全局属性。
+// 如果不加 val/var 进行修饰，则构造函数只能在 init 函数块和全局属性初始化时进行引用
+class Point3  ( x: Int,  y: Int){
+    init {
+    }
+    init {
+    }
 
+}
+//次构造函数
+//如果类有一个主构造函数，
+// 每个次构造函数都需要直接委托给主构造函数或者委托给另一个次构造函数以此进行间接委托，
+// 用 this 关键字来进行指定即可
+class Point4(val x:Int,val y:Int){
+//执行顺序：主构造函数--init代码块--次构造的函数体
+//Point4(10L):sort1--sort2--sort3--sort4
+    init {
+        println("sort1")
+    }
+    init {
+        println("sort2")
+    }
+    constructor(z :Int):this (z+1,z+2){
+        println("sort3")
+    }
+    constructor(w :Long):this (w.toInt()){
+        println("sort4")
+    }
+}
+class  User{
 
+    val  name:String="jc"
+   var age:Int=19
 
+}
+//访问器默认实现逻辑很简单：
+// 创建一个存储值的字段，以及返回属性值（val var）的 getter 和更新属性值（var）的 setter
+//我们也可以自定义访问器
+class Point(val x: Int, val y: Int) {
 
+    val isEquals1: Boolean
+        get() {
+            return x == y
+        }
 
+    val isEquals2
+        get() = x == y
 
+    var isEquals3 = false
+        get() = x > y
+        set(value) {
+            field = !value
+        }
+
+}
+//延迟初始化
+//一般地，非空类型的属性必须在构造函数中初始化
+//但像使用了 Dagger2 这种依赖注入框架的项目来说就十分的不方便了
+//所以可以用 lateinit 修饰符来标记该属性，用于告诉编译器该属性会在稍后的时间被初始化
+class Point5(val x: Int, val y: Int)
+class Example() {
+
+    //用 lateinit 修饰的属性或变量必须为非空类型，并且不能是原生类型
+    lateinit var point: Point5
+    var newPoint: Point5
+
+    init {
+        newPoint = Point5(10, 20)
+    }
+    fun printPoint(){
+//        print(newPoint.x) //10
+        //如果访问了一个未经过初始化的 lateinit 变量
+//        print(point.x) //UninitializedPropertyAccessException
+    }
+
+}
+//抽象类  默认open
+ abstract class BaseClass{
+    abstract fun fun1()
+}
+class NewClass :BaseClass(){
+    override fun fun1() {
+        TODO("Not yet implemented")
+    }
+
+}
+//数据类  默认为主构造函数中声明的所有属性生成了如下几个方法
+//getter、setter（需要是 var）
+//componentN()。按主构造函数的属性声明顺序进行对应
+//copy()
+//toString()
+//hashCode()
+//equals()
+//因此 数据类有以下要求
+//主构造函数需要包含一个参数
+//主构造函数的所有参数需要标记为 val 或 var
+//数据类不能是抽象、开放、密封或者内部的
+//重点：toString()、equals()、hashCode()、copy() 等方法只考虑主构造函数中声明的属性
+data class Point6(val x: Int, val y: Int)
+
+//密封类
+//用 Sealed 修饰的类的直接子类只允许被定义在 Sealed 类所在的文件中
+//对于 View 类，其子类只能定义在与之同一个文件里，
+// Sealed 修饰符修饰的类也隐含表示该类为 open 类，因此无需再显式地添加 open 修饰符
+sealed class View {
+    open fun click() {
+    }
+}
+class Button : View() {
+    override fun click() {
+        super.click()
+    }
+}
+class TextView : View() {
+}
+class Test{
+    // Sealed 类的子类对于编译器来说是可控的
+    //所以如果在 when 表达式中处理了所有 Sealed 类的子类，
+    // 那就不需要再提供 else 默认分支,编译器也不会报错
+    fun check(view :View):Boolean{
+        when(view){
+            is Button->{
+                return true
+            }
+            is TextView->{
+                return false
+            }
+        }
+    }
+}
+
+//枚举类
+//可以声明一些参数,也可以实现接口
+enum class Day(val index: Int) {
+    SUNDAY(0), MONDAY(1), TUESDAY(2), WEDNESDAY(3), THURSDAY(4), FRIDAY(5), SATURDAY(6)
+}
+//匿名内部类
+//使用对象表达式来创建匿名内部类实例
+interface OnClickListener {
+    fun onClick()
+}
+
+class View2 {
+    fun setClickListener(clickListener: OnClickListener) {
+    }
+}
+
+fun test() {
+    val view = View2()
+    view.setClickListener(object :OnClickListener{
+        override fun onClick() {
+            TODO("Not yet implemented")
+        }
+
+    })
+}
 
 fun main(args: Array<String>){
-    KTTest().testNull()
 
 
 }
