@@ -455,8 +455,150 @@ class KTTest {
         println("value is String , length is ${tempValue ?.length}")
     }
 
+    /**
+     * 集合
+     * 分为只读集合与可变集合
+     * 集合元素      只读       可变
+     * List         listOf     mutableListOf、arrayListOf
+     * Set          setOf      mutableSetOf、hashSetOf、linkedSetOf、sortedSetOf
+     * Map          mapOf      mutableMapOf、hashMapOf、linkedMapOf、sortedMapOf
+     *
+     */
+
+    //可空性
+    //两个维度，1：包含的元素可空 2：本身可空
+    var intList: List<Int?>? = listOf(10, 20, 30, 40, null)
+
+    /**
+     * 扩展函数和扩展属性
+     * 扩展函数表现得就像是属于这个类本身的一样，
+     * 可以使用 this 关键字并直接调用其所有 public 方法
+     * 和在类内部定义的方法不同的是，扩展函数不能访问私有的或是受保护的成员
+     */
+    //为 String 类声明一个扩展函数 lastChar() ，用于返回字符串的最后一个字符
+    //get方法是 String 类的内部方法，length 是 String 类的内部成员变量，在此处可以直接调用
+    fun String.lastChar() = get(length - 1)
+    fun testLastChar(){
+        val text="fete"
+        print(text.lastChar())
+    }
+
+    //应用：为可空接收者定义扩展
+    //方便处理空值
+    fun String?.check(){
+        if(this==null){
+        }else{
+        }
+    }
+
+    //Lambda 表达式
+    //Lambda 表达式本质上就是可以传递给其它函数的一小段代码
+    //1、一个 Lambda 表达式始终用花括号包围，通过箭头把实参列表和函数体分开
+    //2、如果 Lambda 声明了函数类型，那么就可以省略函数体的类型声明
+    //3、如果 Lambda 声明了参数类型，且返回值支持类型推导，那么就可以省略函数类型声明
+    //以下三个plus方法 完全等价
+    fun testLambda(){
+        val plus1:(Int,Int)->Int={x:Int,y:Int->x+y}
+        val plus2:(Int,Int)->Int={x,y->x+y}
+        val plus3 = { x: Int, y: Int -> x + y }
+        println(plus3(1, 2))
+    }
+
+    //标准库中的扩展函数( Standard 文件下)
+    /**
+     *
+     * 函数名   参数     返回值    扩展函数
+     * let     it       闭包返回   是
+     * apply   this     this      否
+     * with    this     闭包       是
+     * run     this     闭包       是
+     *
+     */
+
+    //let返回值是闭包 最后一行函数的结果
+    //使用it 指代对象
+    val let=ExTest().let {
+        it.name="wjc"
+        name.length
+    }
+    fun testLet(){
+        print(let)  //10
+    }
+
+    //apply 返回值是myName本身
+    val apply=ExTest().apply {
+        this.name=this.name.lowercase() //可以用this
+        name.length //也可直接调用
+    }
+    fun testApply(){
+        print(apply.name)  //wujignchao
+    }
+
+    //with不是扩展函数，使用方式略有不同
+    //与apply不同的是 返回值是闭包
+    fun testWith(){
+        with(ExTest()){
+            name=name.lowercase()
+            name.length
+        }.let {
+            print(it) //10
+        }
+    }
+    fun testRun(){
+        ExTest().run {
+            name=name.lowercase()
+            name.length
+        }.let {
+            print(this)//10
+        }
+    }
+    /**
+     * 数组操作符
+     */
+    //any
+    fun testCollectFun(){
+        val list = listOf(1, 3, 5, 7, 9)
+
+        //总数操作符
+        //至少有一个元素符合给出的判断条件，则返回 true
+        println(list.any { it > 13 })  //false
+        println(list.any { it > 7 })   //true
+
+        //如果全部的元素符合给出的判断条件，则返回 true
+        println(list.all { it > 13 })  //false
+        println(list.all { it > 0 })   //true
+
+        //过滤操作符
+        //过滤出所有符合给定函数条件的元素
+        println(list.filter { it < 4 }) //[1, 3]
+
+        //映射操作符
+        //遍历所有的元素，为每一个创建一个集合，最后把所有的集合放在一个集合中
+        println(list.flatMap { listOf(it, it + 1) }) //[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        println(list.flatMap { listOf(2*it )}) //[2, 6, 10, 14, 18]
+
+        //返回一个每一个元素根据给定的函数转换所组成的List。
+        println(list.map {it}) //[1, 3, 5, 7, 9]
+        println(list.map {it+3}) //[4, 6, 8, 10, 12]
+        //去掉null的元素
+        println(list.mapNotNull {it+3}) //[4, 6, 8, 10, 12]
+
+
+    }
+
+    fun zhongshui(){
+        //中缀调用
+        val maps = mapOf(1 to "leavesC", 2 to "ye", 3 to "czy")
+
+    }
+
+
 
 }
+ class ExTest{
+     var name="WuJignChao"
+     var age=18
+ }
 
 /**
  * 修饰符(类默认是 final且 public 的)
@@ -648,7 +790,27 @@ fun test() {
     })
 }
 
-fun main(args: Array<String>){
+//嵌套类与内部类
+class Outer{
+    val bar=1
+    //正常声明 为嵌套类
+    //嵌套类不会包含对外部类的隐式引用（相当于是静态内部类）
+    class Nested{
+        //报错
+//        val barInner=bar
+    }
 
+    //加inner 变为内部类
+    //内部类会隐式持有对外部类的引用
+    inner class Nested2{
+        val barInner=bar
+    }
+
+}
+
+
+
+fun main(args: Array<String>){
+    KTTest().testCollectFun()
 
 }
