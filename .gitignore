@@ -13,3 +13,13 @@
 .externalNativeBuild
 .cxx
 local.properties
+/mp/
+/gnbase/build/
+/.idea/
+/caches/
+/native/
+/native/jansi/
+/daemon/6.5/
+/wrapper/dists/
+/kotlin-profile/
+/daemon/7.0.2/

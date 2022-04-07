@@ -1,10 +1,14 @@
 package com.bxfox.moduletest
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.util.Log
+import androidx.core.graphics.applyCanvas
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+import kotlin.reflect.KProperty
 
 class KTTest {
     //可变引用
@@ -148,7 +152,10 @@ class KTTest {
 
 
     fun compute(index:Int,value:String){
+
+
         println(value.length + index)
+
 
     }
     //命名参数，即在调用某函数的时候，可以将函数参数名一起标明
@@ -500,17 +507,28 @@ class KTTest {
     fun testLambda(){
         val plus1:(Int,Int)->Int={x:Int,y:Int->x+y}
         val plus2:(Int,Int)->Int={x,y->x+y}
-        val plus3 = { x: Int, y: Int -> x + y }
-        println(plus3(1, 2))
+        val plus3 = { x: Int-> x *2 }
+        val a=5
+        println( a.let{plus3})
     }
+    class Person(age:Int){
+        constructor():this(0)
+        val age=age
+    }
+    fun testlambda2(){
+        val people= listOf(Person(),Person(2))
+        println(people.maxByOrNull {it.age })
+    }
+
+
 
     //标准库中的扩展函数( Standard 文件下)
     /**
      *
      * 函数名   参数     返回值    扩展函数
      * let     it       闭包返回   是
-     * apply   this     this      否
-     * with    this     闭包       是
+     * apply   this     this      是
+     * with    this     闭包       否
      * run     this     闭包       是
      *
      */
@@ -592,6 +610,11 @@ class KTTest {
 
     }
 
+    public inline fun Bitmap.applyCanvas(block: Canvas.() -> Unit): Bitmap {
+        val c = Canvas(this)
+        c.block()
+        return this
+    }
 
 
 }
@@ -627,6 +650,14 @@ internal    	 模块中可见	      模块中可见
 protected	     子类中可见
 private	         类中可见	      文件中可见
  */
+
+class ccc1{
+    constructor(age: Int)
+}
+
+class ccc2(){
+    constructor(age: Int):this()
+}
 
 //constructor(val x: Int, val y: Int) 这部分为主构造函数
 //constructor 在构造函数没有注解或可见性修饰符时可省略
@@ -777,6 +808,7 @@ interface OnClickListener {
 
 class View2 {
     fun setClickListener(clickListener: OnClickListener) {
+
     }
 }
 
@@ -784,7 +816,6 @@ fun test() {
     val view = View2()
     view.setClickListener(object :OnClickListener{
         override fun onClick() {
-            TODO("Not yet implemented")
         }
 
     })
@@ -808,9 +839,50 @@ class Outer{
 
 }
 
+//代理  by 接口代理
+interface  Delegate{
+    fun do1()
+}
+class DelegateImp(delegate: Delegate):Delegate by delegate{
+    override fun do1() {
+        println("")
+    }
+
+}
+
+//属性代理
+class M{
+    lateinit var b:String
+    val s:String by MyDelegate {"hello" } //hello
+    val t:String by lazy {"hello" } //hello
+    val l:Lazy<String> = lazy {
+        println("lazying")
+        "hello" }
+    val a:String by l
+    fun initb(){
+        b="ewef"
+        println(b)
+    }
+
+}
+
+class MyDelegate<T>(val init:()->T){
+    operator fun getValue(thisRef:Any?,property:KProperty<*>):T{
+        return init()
+    }
+}
 
 
-fun main(args: Array<String>){
-    KTTest().testCollectFun()
 
+object tt {
+
+    @JvmStatic
+    fun main(args: Array<String>){
+        println(  M().s)
+        println(  M().t)
+        println(  M().l)
+        println(  M().a)
+        M().initb()
+
+    }
 }
