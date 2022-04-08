@@ -3,6 +3,7 @@ if(rootProject.ext.android.is_all_app){
 }else{
     apply plugin: 'com.android.library'
 }
+apply plugin: 'kotlin-android'
 
 
 android {
@@ -51,7 +52,7 @@ android {
 }
 
 dependencies {
-    api(project(path:':modulebase'))
+    api project(":base_module")
     annotationProcessor "com.alibaba:arouter-compiler:${rootProject.ext.dependencies.arouterApiVersion}"
 
 }

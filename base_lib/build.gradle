@@ -1,0 +1,71 @@
+plugins {
+    id 'com.android.library'
+}
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdk rootProject.ext.android.compileSdk
+
+    defaultConfig {
+        minSdk rootProject.ext.android.minSdk
+        targetSdk rootProject.ext.android.targetSdk
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    api rootProject.ext.dependencies .publicimplementation
+    api "com.alibaba:arouter-api:${rootProject.ext.dependencies.arouterApiVersion}"
+
+    api 'com.google.android.flexbox:flexbox:3.0.0'
+    //ktx
+    api "androidx.fragment:fragment-ktx:1.4.1"
+    api "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
+    api "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
+    //http
+    api(platform("com.squareup.okhttp3:okhttp-bom:4.9.3"))
+    api "com.squareup.okhttp3:okhttp"
+    api "com.squareup.okhttp3:logging-interceptor"
+    def retrofit_version = '2.9.0'
+    api "com.squareup.retrofit2:retrofit:$retrofit_version"
+    api "org.greenrobot:eventbus:3.3.1"
+    //db
+    def room_version = "2.4.2"
+    api "androidx.room:room-runtime:$room_version"
+    //缓存框架
+    api "com.orhanobut:hawk:2.0.1"
+
+    //dialog
+    api 'com.github.li-xiaojun:XPopup:2.7.6'
+
+    api 'com.github.bumptech.glide:glide:4.13.0'
+    api 'jp.wasabeef:glide-transformations:4.3.0'
+    def refresh_layout_version = '2.0.3'
+    api "com.scwang.smart:refresh-layout-kernel:$refresh_layout_version"      //核心必须依赖
+    api "com.scwang.smart:refresh-header-classics:$refresh_layout_version"    //经典刷新头
+    api "com.scwang.smart:refresh-footer-classics:$refresh_layout_version"   //经典加载
+    api "com.scwang.smart:refresh-header-material:$refresh_layout_version"    //谷歌刷新头
+    //statusBar navigationBar lib
+    api 'com.geyifeng.immersionbar:immersionbar:3.2.2'
+    //recyclerview adapter
+    api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.7'
+    //gif drawable和gif imageview，比glide更流畅
+    api 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
+
+
+}

@@ -4,7 +4,7 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-          <option name="delegatedBuild" value="false" />
+        <option name="delegatedBuild" value="false" />
         <option name="testRunner" value="GRADLE" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
@@ -15,11 +15,11 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/aroutermd" />
             <option value="$PROJECT_DIR$/aroutermodule" />
-            <option value="$PROJECT_DIR$/basea" />
-            <option value="$PROJECT_DIR$/baseb" />
+            <option value="$PROJECT_DIR$/base_lib" />
+            <option value="$PROJECT_DIR$/base_module" />
+            <option value="$PROJECT_DIR$/base_ui" />
             <option value="$PROJECT_DIR$/modulea" />
             <option value="$PROJECT_DIR$/moduleb" />
-            <option value="$PROJECT_DIR$/modulebase" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

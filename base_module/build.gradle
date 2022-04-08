@@ -1,17 +1,16 @@
- if(rootProject.ext.android.is_all_app){
-     apply plugin: 'com.android.application'
-    }else{
-     apply plugin: 'com.android.library'
-    }
- apply plugin: 'kotlin-android'
-
+if(rootProject.ext.android.is_all_app){
+    apply plugin: 'com.android.application'
+}else{
+    apply plugin: 'com.android.library'
+}
+apply plugin: 'kotlin-android'
 
 android {
     compileSdk rootProject.ext.android.compileSdk
 
     defaultConfig {
         if(rootProject.ext.android.is_all_app){
-            applicationId "com.bxfox.modulea"
+            applicationId "com.bxfox.modulebase"
         }
 
         minSdk rootProject.ext.android.minSdk
@@ -20,11 +19,7 @@ android {
         versionName rootProject.ext.android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [AROUTER_MODULE_NAME: project.getName()]
-            }
-        }
+
     }
 
     buildTypes {
@@ -40,9 +35,6 @@ android {
 }
 
 dependencies {
-    annotationProcessor "com.alibaba:arouter-compiler:${rootProject.ext.dependencies.arouterApiVersion}"
-    api project(":base_module")
-
-
+    api project(":base_ui")
 
 }
