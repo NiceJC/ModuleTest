@@ -3,7 +3,6 @@ package com.bxfox.moduletest
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.util.Log
-import androidx.core.graphics.applyCanvas
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.contracts.ExperimentalContracts
@@ -702,7 +701,7 @@ class  User{
 //访问器默认实现逻辑很简单：
 // 创建一个存储值的字段，以及返回属性值（val var）的 getter 和更新属性值（var）的 setter
 //我们也可以自定义访问器
-class Point(val x: Int, val y: Int) {
+class Point9(val x: Int, val y: Int) {
 
     val isEquals1: Boolean
         get() {
@@ -768,27 +767,27 @@ data class Point6(val x: Int, val y: Int)
 //用 Sealed 修饰的类的直接子类只允许被定义在 Sealed 类所在的文件中
 //对于 View 类，其子类只能定义在与之同一个文件里，
 // Sealed 修饰符修饰的类也隐含表示该类为 open 类，因此无需再显式地添加 open 修饰符
-sealed class View {
+sealed class View1 {
     open fun click() {
     }
 }
-class Button : View() {
+class Button1 : View1() {
     override fun click() {
         super.click()
     }
 }
-class TextView : View() {
+class TextView1 : View1() {
 }
 class Test{
     // Sealed 类的子类对于编译器来说是可控的
     //所以如果在 when 表达式中处理了所有 Sealed 类的子类，
     // 那就不需要再提供 else 默认分支,编译器也不会报错
-    fun check(view :View):Boolean{
+    fun check(view :View1):Boolean{
         when(view){
-            is Button->{
+            is Button1->{
                 return true
             }
-            is TextView->{
+            is TextView1->{
                 return false
             }
         }

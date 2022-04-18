@@ -1,5 +1,8 @@
 plugins {
     id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+
 }
 apply plugin: 'kotlin-android'
 
@@ -13,6 +16,11 @@ android {
         versionName rootProject.ext.android.versionName
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+            }
+        }
     }
 
     buildTypes {
@@ -26,10 +34,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 }
-
+kapt {
+    arguments {
+        arg("AROUTER_MODULE_NAME", project.getName())
+    }
+}
 dependencies {
     api rootProject.ext.dependencies .publicimplementation
     api "com.alibaba:arouter-api:${rootProject.ext.dependencies.arouterApiVersion}"
+    kapt "com.alibaba:arouter-compiler:${rootProject.ext.dependencies.arouterApiVersion}"
 
     api 'com.google.android.flexbox:flexbox:3.0.0'
     //ktx
@@ -37,16 +50,23 @@ dependencies {
     api "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
     api "androidx.lifecycle:lifecycle-livedata-ktx:2.4.1"
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1"
+
     //http
     api(platform("com.squareup.okhttp3:okhttp-bom:4.9.3"))
     api "com.squareup.okhttp3:okhttp"
     api "com.squareup.okhttp3:logging-interceptor"
     def retrofit_version = '2.9.0'
     api "com.squareup.retrofit2:retrofit:$retrofit_version"
+    api "com.squareup.retrofit2:converter-gson:$retrofit_version"
+
+
     api "org.greenrobot:eventbus:3.3.1"
+
     //db
     def room_version = "2.4.2"
     api "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
     //缓存框架
     api "com.orhanobut:hawk:2.0.1"
 
@@ -54,7 +74,11 @@ dependencies {
     api 'com.github.li-xiaojun:XPopup:2.7.6'
 
     api 'com.github.bumptech.glide:glide:4.13.0'
+    kapt 'com.github.bumptech.glide:compiler:4.13.0'
     api 'jp.wasabeef:glide-transformations:4.3.0'
+
+    //api "io.coil-kt:coil:2.0.0-rc02"
+
     def refresh_layout_version = '2.0.3'
     api "com.scwang.smart:refresh-layout-kernel:$refresh_layout_version"      //核心必须依赖
     api "com.scwang.smart:refresh-header-classics:$refresh_layout_version"    //经典刷新头
@@ -66,6 +90,4 @@ dependencies {
     api 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.7'
     //gif drawable和gif imageview，比glide更流畅
     api 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
-
-
 }

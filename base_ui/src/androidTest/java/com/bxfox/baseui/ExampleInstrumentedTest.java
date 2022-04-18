@@ -1,4 +1,4 @@
-package com.bxfox.baseb;
+package com.bxfox.baseui;
 
 import android.content.Context;
 

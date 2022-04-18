@@ -2,7 +2,7 @@ package com.bxfox.modulebase
 
 import android.app.Application
 import com.alibaba.android.arouter.launcher.ARouter
-import com.bxfox.baseb.BuildConfig
+import com.bxfox.baseui.BuildConfig
 
 class MyApplication : Application() {
 
